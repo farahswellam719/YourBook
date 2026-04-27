@@ -1,0 +1,37 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+
+# Local env / secrets — even though we don't have any, just in case
+.env
+.env.local
+
+# Build output (none yet, but future-proofing)
+dist/
+build/
+node_modules/
+
+# OS junk
+.Spotlight-V100
+.Trashes
+
+# Test PDFs you might want to keep local
+*.pdf
+!docs/*.pdf
