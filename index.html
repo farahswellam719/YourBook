@@ -9,51 +9,50 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
   :root {
-    /* Warm-grey neutrals with subtle blue undertone */
-    --bg: #fbfcfd;
+    /* Clean neutrals */
+    --bg: #ffffff;
     --bg-elevated: #ffffff;
     --bg-card: #ffffff;
-    --bg-subtle: #f3f5f8;
-    --bg-hover: #eaeef4;
-    --bg-grey: #eef1f5;
-    --bg-grey-darker: #dde2ea;
-    --bg-cream: #f7f9fc;
-    --border: #e2e7ee;
-    --border-strong: #c8d0db;
-    /* Softer text — graphite rather than pure black */
-    --text: #1f2937;
-    --text-secondary: #4b5563;
-    --text-muted: #8a93a4;
-    /* Nav stays dark for contrast but warmer than pure black */
-    --nav-bg: #1f2937;
-    --nav-bg-blur: rgba(31, 41, 55, 0.94);
-    --nav-text: #f9fafb;
-    --nav-text-muted: #9ca3af;
+    --bg-subtle: #f7f7f5;
+    --bg-hover: #f0f0ed;
+    --bg-grey: #f5f5f3;
+    --bg-grey-darker: #e8e8e4;
+    --bg-cream: #fafaf7;
+    --border: #e8e8e4;
+    --border-strong: #d4d4cf;
+    /* Black + soft greys */
+    --text: #0a0a0a;
+    --text-secondary: #4a4a48;
+    --text-muted: #8a8a85;
+    /* Nav: pure black */
+    --nav-bg: #0a0a0a;
+    --nav-bg-blur: rgba(10, 10, 10, 0.94);
+    --nav-text: #fafafa;
+    --nav-text-muted: #9a9a95;
     --nav-active: #ffffff;
-    /* Baby blue accent */
-    --accent: #6ba8d4;
-    --accent-hover: #4a90c2;
-    --accent-soft: #d6e7f4;
-    --accent-softer: #ebf3fa;
-    --accent-bg: #ebf3fa;
-    --accent-text: #1f3a52;
-    --highlight: #d6e7f4;
-    --highlight-strong: #6ba8d4;
-    --danger: #c14b56;
-    --danger-bg: #fcecee;
-    --success: #5b9b7a;
-    --success-bg: #ecf5f0;
-    --bubble: #ebf3fa;
-    --bubble-border: #6ba8d4;
-    --shadow-sm: 0 1px 2px 0 rgba(31, 41, 55, 0.04);
-    --shadow: 0 1px 3px 0 rgba(31, 41, 55, 0.05), 0 1px 2px -1px rgba(31, 41, 55, 0.03);
-    --shadow-md: 0 4px 12px -1px rgba(31, 41, 55, 0.06), 0 2px 4px -2px rgba(31, 41, 55, 0.04);
-    --shadow-lg: 0 10px 30px -3px rgba(31, 41, 55, 0.08), 0 4px 8px -4px rgba(31, 41, 55, 0.05);
+    /* Gold accent */
+    --accent: #c89b3d;
+    --accent-hover: #a8801e;
+    --accent-soft: #f5e6c3;
+    --accent-softer: #fdf8ec;
+    --accent-bg: #fdf8ec;
+    --accent-text: #5c4612;
+    --highlight: #fef3a1;
+    --highlight-strong: #f4d03f;
+    --danger: #b91c1c;
+    --danger-bg: #fef2f2;
+    --success: #15803d;
+    --success-bg: #f0fdf4;
+    --bubble: #fff8e1;
+    --bubble-border: #f4d03f;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+    --shadow-md: 0 4px 12px -1px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.04);
+    --shadow-lg: 0 10px 30px -3px rgb(0 0 0 / 0.08), 0 4px 8px -4px rgb(0 0 0 / 0.04);
     --radius-sm: 6px;
     --radius: 10px;
     --radius-md: 12px;
     --radius-lg: 16px;
-    /* Sleeker fonts: Manrope for sans (geometric, friendly), Fraunces for display */
     --font-display: 'Fraunces', 'Cormorant Garamond', Georgia, serif;
     --font-sans: 'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', ui-monospace, monospace;
@@ -121,11 +120,7 @@
     letter-spacing: 0.01em;
   }
   .nav-link:hover { background: rgba(255,255,255,0.06); color: var(--nav-text); }
-  .nav-link.active {
-    background: rgba(107, 168, 212, 0.18);
-    color: var(--nav-active);
-    box-shadow: inset 0 0 0 1px rgba(107, 168, 212, 0.25);
-  }
+  .nav-link.active { background: rgba(255,255,255,0.1); color: var(--nav-text); }
   .nav-link .badge {
     margin-left: 8px;
     background: rgba(255,255,255,0.12);
@@ -273,7 +268,7 @@
     border-color: var(--accent);
     background: var(--accent-softer);
     transform: translateY(-1px);
-    box-shadow: 0 8px 24px rgba(107, 168, 212, 0.12);
+    box-shadow: 0 8px 24px rgba(200, 155, 61, 0.15);
   }
   .drop-zone .drop-icon {
     width: 36px; height: 36px;
@@ -574,16 +569,15 @@
   }
 
   .btn-primary {
-    background: var(--accent);
+    background: var(--text);
     color: white;
-    border-color: var(--accent);
-    box-shadow: 0 1px 2px rgba(107, 168, 212, 0.25);
+    border-color: var(--text);
   }
   .btn-primary:hover:not(:disabled) {
-    background: var(--accent-hover);
-    border-color: var(--accent-hover);
+    background: #1a1a1a;
+    border-color: #1a1a1a;
     transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(107, 168, 212, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
   .btn-danger {
@@ -965,7 +959,7 @@
 
   /* Text panel — taller, less cluttered */
   .text-panel {
-    background: linear-gradient(180deg, #f8fbfd 0%, #f3f5f8 100%);
+    background: var(--bg-cream);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     padding: 36px 44px;
@@ -977,7 +971,6 @@
     line-height: 1.85;
     color: var(--text);
     letter-spacing: -0.005em;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
   }
   .text-panel::-webkit-scrollbar { width: 8px; }
   .text-panel::-webkit-scrollbar-track { background: transparent; }
@@ -1213,8 +1206,8 @@
     overflow: hidden;
   }
   .lib-item:hover {
-    border-color: var(--accent);
-    box-shadow: 0 2px 8px rgba(107, 168, 212, 0.1);
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-sm);
   }
   .lib-item.dragging {
     opacity: 0.4;
