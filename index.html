@@ -339,6 +339,36 @@
   }
   .key-card a { color: var(--text); font-weight: 500; text-decoration: underline; text-underline-offset: 2px; }
   .key-input-row { display: flex; gap: 8px; }
+  .key-status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 12px;
+  }
+  .btn-ghost-danger {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s;
+  }
+  .btn-ghost-danger:hover {
+    background: var(--danger-bg);
+    border-color: var(--danger);
+    color: var(--danger);
+  }
+  .btn-ghost-danger:hover svg { color: var(--danger); }
   .input {
     flex: 1;
     padding: 10px 14px;
@@ -809,14 +839,15 @@
   .info-popover {
     position: absolute;
     z-index: 100;
-    background: var(--text);
-    color: white;
+    background: #f5f5f3;
+    color: var(--text);
     padding: 14px 16px;
     border-radius: 10px;
+    border: 1px solid var(--border);
     font-size: 13px;
     line-height: 1.55;
     width: min(340px, calc(100vw - 32px));
-    box-shadow: 0 10px 30px rgba(0,0,0,0.25), 0 2px 6px rgba(0,0,0,0.15);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.06);
     opacity: 0;
     pointer-events: none;
     transform: translateY(-4px);
@@ -831,31 +862,34 @@
     margin: 0 0 6px;
     font-size: 13px;
     font-weight: 600;
+    color: var(--text);
   }
   .info-popover p {
     margin: 0 0 8px;
-    color: rgba(255,255,255,0.85);
+    color: var(--text-secondary);
   }
   .info-popover p:last-child { margin-bottom: 0; }
   .info-popover code {
-    background: rgba(255,255,255,0.15);
+    background: rgba(0,0,0,0.06);
     padding: 1px 5px;
     border-radius: 3px;
     font-family: var(--font-mono);
     font-size: 11.5px;
+    color: var(--text);
   }
   .info-popover a {
-    color: #ffd591;
+    color: var(--accent-hover);
     text-decoration: underline;
   }
   .info-popover-link {
     display: block;
     margin-top: 10px;
     padding-top: 10px;
-    border-top: 1px solid rgba(255,255,255,0.15);
+    border-top: 1px solid var(--border);
     font-size: 12px;
-    color: #ffd591;
+    color: var(--accent-hover);
     text-decoration: none;
+    font-weight: 600;
   }
   .info-popover-link:hover { text-decoration: underline; }
 
@@ -1531,11 +1565,11 @@
   }
   .note-date { font-family: var(--font-mono); }
   .note-location {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     gap: 6px;
     margin-bottom: 10px;
-    padding: 4px 10px;
+    padding: 4px 6px 4px 10px;
     background: var(--bg-subtle);
     border-radius: 999px;
     font-size: 12px;
@@ -1547,12 +1581,44 @@
     font-family: var(--font-display);
     font-weight: 600;
     color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 200px;
   }
   .note-loc-divider { color: var(--text-muted); }
   .note-loc-page {
     font-family: var(--font-mono);
     color: var(--text-secondary);
     font-size: 11.5px;
+  }
+  .note-card-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 2px;
+    opacity: 0.5;
+    transition: opacity 0.15s;
+  }
+  .note-card:hover .note-card-actions { opacity: 1; }
+  .note-card-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 6px;
+    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.12s;
+  }
+  .note-card-btn:hover {
+    background: rgba(0,0,0,0.06);
+    color: var(--text);
+  }
+  .note-card-btn-danger:hover {
+    background: var(--danger-bg);
+    color: var(--danger);
   }
 
   /* Export dropdown menu */
@@ -2157,10 +2223,17 @@
         <input type="password" class="input" id="keyInput" placeholder="Paste your API key here" />
         <button class="btn btn-primary" id="keySaveBtn">Save key</button>
       </div>
-      <p style="margin-top: 10px; font-size: 12px; display: flex; gap: 12px;">
-        <a href="#" id="clearKeyLink" style="color: var(--text-muted);">Clear saved key</a>
+      <div class="key-status-row">
         <span id="keyStatusText" style="color: var(--success); display: none;">✓ Key saved</span>
-      </p>
+        <button class="btn btn-ghost-danger" id="clearKeyBtn" type="button" title="Remove the saved key from this browser">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/>
+            <path d="M10 11v6M14 11v6"/>
+          </svg>
+          Delete saved key
+        </button>
+      </div>
     </div>
 
     <!-- Player -->
@@ -3884,6 +3957,21 @@
                 <span class="note-loc-chapter">${chapterLabel}</span>
                 <span class="note-loc-divider">·</span>
                 <span class="note-loc-page">${pageLabel}</span>
+                <div class="note-card-actions">
+                  <button class="note-card-btn" data-note-action="edit" data-note-id="${n.id}" title="Edit this note">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                  </button>
+                  <button class="note-card-btn note-card-btn-danger" data-note-action="delete" data-note-id="${n.id}" title="Delete this note">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6"/>
+                      <path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/>
+                      <path d="M10 11v6M14 11v6"/>
+                    </svg>
+                  </button>
+                </div>
               </div>
               <div class="note-passage-quote">${escapeHtml((n.passage || '').slice(0, 200))}${(n.passage || '').length > 200 ? '…' : ''}</div>
               <div class="note-text">${escapeHtml(n.text || '')}</div>
@@ -3900,12 +3988,54 @@
 
       // Click handlers
       section.addEventListener('click', async (e) => {
+        // Action buttons take priority over card click
+        const actionBtn = e.target.closest('[data-note-action]');
+        if (actionBtn) {
+          e.stopPropagation();
+          const noteId = actionBtn.dataset.noteId;
+          const action = actionBtn.dataset.noteAction;
+          const note = (await notesAll()).find(n => n.id === noteId);
+          if (!note) return;
+
+          if (action === 'edit') {
+            // Open the doc if needed, then open the dialog for editing
+            if (state.currentDocId !== note.docId) {
+              const fullDoc = await dbGet(note.docId);
+              if (fullDoc) await loadDoc(fullDoc);
+            }
+            state.currentWordIdx = note.startWordIdx;
+            if (state.words.length > 5000) renderWordWindow();
+            updateUI();
+            setTimeout(() => openNoteDialog(note), 100);
+            switchPage('reader');
+            return;
+          }
+
+          if (action === 'delete') {
+            const passage = (note.passage || '').slice(0, 60);
+            const confirmed = confirm(`Delete this note?\n\n"${passage}${passage.length >= 60 ? '…' : ''}"\n\nThis can't be undone.`);
+            if (!confirmed) return;
+            await notesDelete(note.id);
+            // Refresh in-memory state
+            if (state.currentDocId === note.docId) {
+              state.docNotes = await notesByDoc(state.currentDocId);
+              if (state.words.length <= 5000) renderWords();
+              else renderWordWindow();
+              updateUI();
+            }
+            updateNotesCount();
+            renderNotesPage();
+            setStatus('Note deleted.', 'success');
+            return;
+          }
+        }
+
         const card = e.target.closest('.note-card');
         if (card) {
           const noteId = card.dataset.noteId;
           const note = (await notesAll()).find(n => n.id === noteId);
           if (!note) return;
-          // Open the doc and jump to the position
+          // Open the doc and jump to the position (read-only — no auto-edit)
           if (state.currentDocId !== note.docId) {
             const fullDoc = await dbGet(note.docId);
             if (fullDoc) {
@@ -3915,8 +4045,6 @@
           state.currentWordIdx = note.startWordIdx;
           if (state.words.length > 5000) renderWordWindow();
           updateUI();
-          // Open the note for editing after a brief delay so the doc loads
-          setTimeout(() => openNoteDialog(note), 100);
           switchPage('reader');
           return;
         }
@@ -4821,14 +4949,35 @@
   $('keyInput').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') $('keySaveBtn').click();
   });
-  $('clearKeyLink').addEventListener('click', (e) => {
+  $('clearKeyBtn').addEventListener('click', (e) => {
     e.preventDefault();
+    if (!state.apiKey) {
+      setStatus('No saved key to delete.', 'error');
+      return;
+    }
+    if (!confirm('Delete the saved ElevenLabs API key from this browser?\n\nYou\'ll need to paste it again next time you want natural voices.')) return;
+
+    // Clear the key and all derived voice state
     localStorage.removeItem('elevenlabs_key');
+    localStorage.removeItem('elevenlabs_voice_id');
     state.apiKey = '';
+    state.elevenlabsVoiceId = '';
+    state.availableVoices = [];
+
+    // Reset UI
     $('keyInput').value = '';
     $('keyStatusText').style.display = 'none';
+    $('voiceSelect').innerHTML = '<option value="">No voices loaded</option>';
+    $('voiceDropdownRow').style.display = 'none';
+    $('elevenlabsTag').textContent = 'API';
+
+    // Switch back to robotic voice if Natural was selected
+    if (state.voice === 'elevenlabs') {
+      selectVoice('robotic');
+    }
+
     showKeyCard();
-    setStatus('Saved key cleared. Paste a new one above.', 'success');
+    setStatus('Saved key deleted. Paste a new one above to use natural voices again.', 'success');
   });
 
   // ===== Speed =====
