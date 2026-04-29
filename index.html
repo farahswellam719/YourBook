@@ -910,18 +910,21 @@
   .sel-tooltip-btn {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 7px;
     background: linear-gradient(180deg, #fde68a 0%, #f9c84a 100%);
     color: #451a03;
     border: 1px solid #d97706;
-    border-radius: 8px;
-    padding: 8px 14px;
+    border-radius: 10px;
+    padding: 10px 16px;
     font-family: var(--font-sans);
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.18), 0 1px 3px rgba(245,158,11,0.4);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.22), 0 1px 3px rgba(245,158,11,0.4);
     white-space: nowrap;
+    /* Larger touch target on mobile */
+    min-height: 40px;
+    touch-action: manipulation;
   }
   .sel-tooltip-btn:hover {
     background: linear-gradient(180deg, #fcd34d 0%, #f59e0b 100%);
@@ -929,6 +932,13 @@
   }
   .sel-tooltip-btn:active {
     transform: translateY(0);
+  }
+  @media (max-width: 600px) {
+    .sel-tooltip-btn {
+      padding: 12px 18px;
+      font-size: 15px;
+      min-height: 44px;
+    }
   }
   /* Make text selection visually pop in the reader */
   #textDisplay ::selection {
@@ -1016,6 +1026,17 @@
     border-radius: 3px;
     transition: background 0.12s, color 0.12s;
     cursor: pointer;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+    -webkit-touch-callout: default;
+  }
+  /* Ensure the whole reading panel allows text selection on mobile */
+  #textDisplay {
+    -webkit-user-select: text;
+    user-select: text;
+    -webkit-touch-callout: default;
   }
   .word:hover { background: rgba(255,255,255,0.7); }
   .word.active {
@@ -4446,27 +4467,20 @@
   function attachWordClickHandler() {
     const textDisplay = $('textDisplay');
 
-    // Mousedown / touchstart: record start position
-    textDisplay.onmousedown = (e) => {
-      const w = e.target.closest('.word');
+    // Track pointer movement to differentiate tap-to-jump from drag-to-select
+    textDisplay.onpointerdown = (e) => {
       mouseDownPos = { x: e.clientX, y: e.clientY };
-      mouseDownIdx = w ? parseInt(w.dataset.idx, 10) : null;
-    };
-    textDisplay.ontouchstart = (e) => {
-      if (e.touches.length !== 1) return;
-      const t = e.touches[0];
       const w = e.target.closest('.word');
-      mouseDownPos = { x: t.clientX, y: t.clientY };
       mouseDownIdx = w ? parseInt(w.dataset.idx, 10) : null;
     };
 
-    // Click handler — only fires if there's no text selection AND minimal mouse movement
+    // Click handler — only fires for clean taps (no drag, no active selection)
     textDisplay.onclick = (e) => {
-      // If there's an active text selection, don't treat as a click-to-jump
+      // If there's an active text selection, this isn't a tap-to-jump — let selection logic handle it
       const sel = window.getSelection();
       if (sel && sel.toString().trim().length > 0) return;
 
-      // Was there meaningful drag? If so, don't jump.
+      // Was there meaningful pointer movement? If so, treat as drag-end, not tap.
       if (mouseDownPos) {
         const dx = Math.abs(e.clientX - mouseDownPos.x);
         const dy = Math.abs(e.clientY - mouseDownPos.y);
@@ -4497,15 +4511,15 @@
         updateUI();
       }
     };
-
-    // Selection end: detect text selection and offer to highlight it
-    const onSelectionEnd = () => {
-      // Small delay so the selection has stabilized
-      setTimeout(handleSelectionChange, 50);
-    };
-    textDisplay.onmouseup = onSelectionEnd;
-    textDisplay.ontouchend = onSelectionEnd;
   }
+
+  // Listen globally for selection changes — works on both desktop and mobile.
+  // We debounce so the tooltip appears AFTER the user finishes adjusting their selection.
+  let selectionTimer = null;
+  document.addEventListener('selectionchange', () => {
+    if (selectionTimer) clearTimeout(selectionTimer);
+    selectionTimer = setTimeout(handleSelectionChange, 350);
+  });
 
   function handleSelectionChange() {
     const sel = window.getSelection();
@@ -4565,11 +4579,22 @@
       });
     }
 
-    // Position above the selection
+    // Position the tooltip — above on desktop, below on mobile (to avoid native iOS context menu)
     const rect = range.getBoundingClientRect();
-    const tooltipWidth = 120;
+    const isMobile = window.innerWidth <= 700;
+    const tooltipWidth = isMobile ? 160 : 130;
+    const tooltipHeight = isMobile ? 48 : 40;
     const left = Math.max(8, Math.min(window.innerWidth - tooltipWidth - 8, rect.left + rect.width / 2 - tooltipWidth / 2));
-    const top = Math.max(8, rect.top - 44 + window.scrollY);
+    let top;
+    if (isMobile) {
+      // Place below the selection on mobile, falling back to above if no room
+      top = rect.bottom + window.scrollY + 12;
+      if (rect.bottom + tooltipHeight + 16 > window.innerHeight) {
+        top = Math.max(8, rect.top - tooltipHeight - 8 + window.scrollY);
+      }
+    } else {
+      top = Math.max(8, rect.top - tooltipHeight - 8 + window.scrollY);
+    }
     tooltip.style.left = left + 'px';
     tooltip.style.top = top + 'px';
     tooltip.classList.add('visible');
